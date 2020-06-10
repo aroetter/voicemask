@@ -1,9 +1,18 @@
 //code by Tyler Glaiel
 //for this mask: https://twitter.com/TylerGlaiel/status/1265035386109128704
 
+// Need to install Adafruit_NeoPixel, code and install instructions here:
+// https://github.com/adafruit/Adafruit_NeoPixel
+// You can install directly from the Arduino IDE, instructions in README of above github repo
+//
+// summary:
+// Sketch > Include Library > Manage Libraries
+// search for and install result for "neopixel strip", then "neomatrix"
+// (It'll ask you to install some needed dependencies, do so.)
+
 #include <Adafruit_NeoPixel.h>
 #include <Adafruit_NeoMatrix.h>
-#include <gamma.h>
+//#include <gamma.h>
 
 #define lengthof(A) ((sizeof((A))/sizeof((A)[0])))
 
@@ -80,10 +89,12 @@ Adafruit_NeoMatrix matrix = Adafruit_NeoMatrix(8, 8, 6,
   NEO_GRB            + NEO_KHZ800);
 
 
-void drawImage(short image_addr){
+// ALEX changed this, used to be (short image_addr) as the type. I wonder if this causes a transpose?
+// void drawImage(short image_addr){
+void drawImage(const uint8_t data[][8]) {
     for(int x = 0; x<8; x++){
         for(int y = 0; y<8; y++){
-            uint8_t index = pgm_read_byte(image_addr+x+y*8);
+            uint8_t index = pgm_read_byte(data+x+y*8);
             matrix.drawPixel(x, y, palette[index]); 
         }
     }
