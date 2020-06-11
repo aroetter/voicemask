@@ -90,15 +90,14 @@ Adafruit_NeoMatrix matrix = Adafruit_NeoMatrix(8, 8, 6,
 
 
 // ALEX changed this, used to be (short image_addr) as the type. I wonder if this causes a transpose?
-// void drawImage(short image_addr){
-void drawImage(const uint8_t data[][8]) {
+//void drawImage(const uint8_t data[][8]) { // this version doesnt' work, so double check memory layout.
+ void drawImage(short image_addr){
     for(int x = 0; x<8; x++){
         for(int y = 0; y<8; y++){
-            uint8_t index = pgm_read_byte(data+x+y*8);
+            uint8_t index = pgm_read_byte(image_addr+x+y*8);
             matrix.drawPixel(x, y, palette[index]); 
         }
     }
-
     matrix.show();
 }
 
@@ -159,7 +158,9 @@ void loop() {
     if(smiling){
         drawImage(mouth_smile);
     } else if(vol < 200){
-        drawImage(mouth_0);
+        // actually always smile
+        // OLD drawImage(mouth_0);
+        drawImage(mouth_smile);
     } else if(vol < 250){
         drawImage(mouth_1);
     } else if(vol < 350){
